@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de Perfiles de Crédito{% endblock %}
+
+{% block content %}
+<div class="container mx-auto mt-10">
+    <div class="mb-4 flex justify-between items-center">
+        <h2 class="text-2xl font-bold">Perfiles de Crédito</h2>
+        <a href="{% url 'simulator' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">&larr; Regresar al Simulador</a>
+    </div>
+    {% if error %}
+    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <strong>Error:</strong> {{ error }}
+    </div>
+    {% endif %}
+    <div class="mb-6">
+        <form method="post" action="{% url 'credit_profile_create' %}" class="bg-white p-4 rounded shadow">
+            {% csrf_token %}
+            <div class="grid grid-cols-2 gap-4">
+                <input type="text" name="name" placeholder="Nombre del Perfil" required class="border p-2 rounded">
+                <input type="number" step="0.01" name="interest_rate" placeholder="Tasa de Interés (%)" required class="border p-2 rounded">
+                <input type="number" step="0.01" name="guarantee_percentage" placeholder="% Afianzamiento" required class="border p-2 rounded">
+                <input type="number" step="0.01" name="guarantee_vat_percentage" placeholder="% IVA Afianzamiento" required class="border p-2 rounded">
+                <input type="number" name="grace_period_days" placeholder="Días de Carencia" required class="border p-2 rounded">
+                <input type="number" step="0.01" name="insurance_percentage" placeholder="% Seguro" required class="border p-2 rounded">
+                <input type="number" step="0.01" name="broker_commission_percentage" placeholder="% Comisión Corredor" required class="border p-2 rounded">
+            </div>
+            <button type="submit" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Crear Perfil</button>
+        </form>
+    </div>
+    <table class="min-w-full bg-white rounded shadow">
+        <thead>
+            <tr>
+                <th class="py-2">Nombre</th>
+                <th class="py-2">Interés (%)</th>
+                <th class="py-2">Afianzamiento (%)</th>
+                <th class="py-2">IVA Afianzamiento (%)</th>
+                <th class="py-2">Días Carencia</th>
+                <th class="py-2">Seguro (%)</th>
+                <th class="py-2">Comisión Corredor (%)</th>
+                <th class="py-2">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profile in profiles %}
+            <tr>
+                <form method="post" action="{% url 'credit_profile_edit' profile.id %}">
+                    {% csrf_token %}
+                    <td><input type="text" name="name" value="{{ profile.name }}" class="border p-1 rounded w-full"></td>
+                    <td><input type="number" step="0.01" name="interest_rate" value="{{ profile.interest_rate|default_if_none:'0.00'|floatformat:'2' }}" class="border p-1 rounded w-full"></td>
+                    <td><input type="number" step="0.01" name="guarantee_percentage" value="{{ profile.guarantee_percentage|default_if_none:'0.00'|floatformat:'2' }}" class="border p-1 rounded w-full"></td>
+                    <td><input type="number" step="0.01" name="guarantee_vat_percentage" value="{{ profile.guarantee_vat_percentage|default_if_none:'0.00'|floatformat:'2' }}" class="border p-1 rounded w-full"></td>
+                    <td><input type="number" name="grace_period_days" value="{{ profile.grace_period_days|default_if_none:'0' }}" class="border p-1 rounded w-full"></td>
+                    <td><input type="number" step="0.01" name="insurance_percentage" value="{{ profile.insurance_percentage|default_if_none:'0.00'|floatformat:'2' }}" class="border p-1 rounded w-full"></td>
+                    <td><input type="number" step="0.01" name="broker_commission_percentage" value="{{ profile.broker_commission_percentage|default_if_none:'0.00'|floatformat:'2' }}" class="border p-1 rounded w-full"></td>
+                    <td class="flex gap-2">
+                        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded">Guardar</button>
+                </form>
+                <form method="post" action="{% url 'credit_profile_delete' profile.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded" onclick="return confirm('¿Seguro que deseas eliminar este perfil?')">Eliminar</button>
+                </form>
+                    </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="8" class="text-center py-4">No hay perfiles registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %} 

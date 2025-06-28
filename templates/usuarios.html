@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de Usuarios{% endblock %}
+
+{% block content %}
+<div class="container mx-auto mt-10">
+    <div class="mb-4 flex justify-between items-center">
+        <h2 class="text-2xl font-bold">Usuarios</h2>
+        <a href="{% url 'simulator' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">&larr; Regresar al Simulador</a>
+    </div>
+    {% if error %}
+    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <strong>Error:</strong> {{ error }}
+    </div>
+    {% endif %}
+    <div class="mb-6">
+        <form method="post" action="{% url 'user_create' %}" class="bg-white p-4 rounded shadow flex flex-wrap gap-4 items-end">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Nombre de usuario" required class="border p-2 rounded">
+            <input type="password" name="password" placeholder="Contraseña" required class="border p-2 rounded">
+            <label class="flex items-center gap-2">
+                <input type="checkbox" name="is_staff" class="form-checkbox"> Administrador
+            </label>
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Crear Usuario</button>
+        </form>
+    </div>
+    <table class="min-w-full bg-white rounded shadow">
+        <thead>
+            <tr>
+                <th class="py-2">Usuario</th>
+                <th class="py-2">Rol</th>
+                <th class="py-2">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <form method="post" action="{% url 'user_edit' user.id %}">
+                    {% csrf_token %}
+                    <td><input type="text" name="username" value="{{ user.username }}" class="border p-1 rounded w-full"></td>
+                    <td>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" name="is_staff" {% if user.is_staff %}checked{% endif %} class="form-checkbox"> Administrador
+                        </label>
+                    </td>
+                    <td class="flex gap-2">
+                        <input type="password" name="password" placeholder="Nueva contraseña (opcional)" class="border p-1 rounded w-full">
+                        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded">Guardar</button>
+                </form>
+                <form method="post" action="{% url 'user_delete' user.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded" onclick="return confirm('¿Seguro que deseas eliminar este usuario?')">Eliminar</button>
+                </form>
+                    </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-center py-4">No hay usuarios registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %} 

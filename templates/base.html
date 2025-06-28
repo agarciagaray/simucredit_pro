@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>{% block title %}SimuCredit Pro{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/styles.css' %}"
+    />
+  </head>
+  <body class="bg-gray-50 flex flex-col min-h-screen">
+    <header class="bg-blue-800 text-white shadow-lg">
+      <div
+        class="container mx-auto px-4 py-4 flex justify-between items-center"
+      >
+        <div class="flex items-center">
+          <i class="fas fa-chart-line text-2xl mr-3"></i>
+          <h1 class="text-xl font-bold">SimuCredit Pro</h1>
+        </div>
+        {% if user.is_authenticated %}
+        <nav class="flex items-center gap-4 mr-6">
+          {% if user.is_staff %}
+          <a
+            href="{% url 'simulator' %}"
+            class="hover:underline"
+            >Simulador</a
+          >
+          <a
+            href="{% url 'credit_profiles_list' %}"
+            class="hover:underline"
+            >Perfiles</a
+          >
+          <a
+            href="{% url 'users_list' %}"
+            class="hover:underline"
+            >Usuarios</a
+          >
+          {% endif %}
+        </nav>
+        <div class="flex items-center">
+          <div class="mr-4">
+            <span class="hidden md:inline">Usuario: </span>
+            <span class="font-semibold">{{ user.username }}</span>
+          </div>
+          <a
+            href="{% url 'logout' %}"
+            class="bg-blue-700 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-200"
+          >
+            <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6 flex-grow">
+      {% block content %} {% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 text-white py-4">
+      <div class="container mx-auto px-4 text-center">
+        <p>
+          &copy; {% now "Y" %} SimuCredit Pro. Todos los derechos reservados.
+        </p>
+        <p class="text-gray-400 text-sm mt-1">
+          Simulador de créditos y cálculo de amortización.
+        </p>
+      </div>
+    </footer>
+
+    {% block scripts %} {% endblock %}
+  </body>
+</html>

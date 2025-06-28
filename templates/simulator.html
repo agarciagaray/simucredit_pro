@@ -1,0 +1,263 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div
+  class="bg-white p-4 rounded-lg shadow mb-6 flex justify-between items-center"
+>
+  <div>
+    <h2 class="text-lg font-semibold">
+      <i class="fas fa-user-shield mr-2"></i>
+      Rol: <span id="current-role">{{ user_role }}</span>
+    </h2>
+    <p
+      id="role-description"
+      class="text-gray-500 text-sm"
+    >
+      {% if user_role == 'ADMIN' %} Modo administrador: simule, vea detalles y
+      configure perfiles. {% else %} Modo usuario: simule y calcule préstamos.
+      {% endif %}
+    </p>
+  </div>
+  <div>
+    {% if user_role == 'ADMIN' %}
+    <a
+      href="{% url 'credit_profiles_list' %}"
+      class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition duration-200 text-sm"
+    >
+      <i class="fas fa-cog mr-2"></i>Configurar Perfiles
+    </a>
+    {% endif %}
+    <div
+      id="loading-indicator"
+      class="hidden ml-4"
+    >
+      <i class="fas fa-circle-notch animate-spin text-blue-500 text-2xl"></i>
+    </div>
+  </div>
+</div>
+
+<div class="bg-white p-6 rounded-lg shadow mb-6">
+  <h2 class="text-xl font-semibold mb-4 flex items-center">
+    <i class="fas fa-calculator mr-2"></i>Simulador de Crédito
+  </h2>
+  <form
+    id="loan-form"
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+  >
+    {% csrf_token %}
+    <div>
+      <label
+        for="profile"
+        class="block text-gray-700 mb-2"
+        >Perfil de Crédito</label
+      >
+      <select
+        id="profile"
+        class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="">Seleccione un perfil</option>
+        {% for profile in credit_profiles %}
+        <option value="{{ profile.id }}">{{ profile.name }}</option>
+        {% endfor %}
+      </select>
+      <p class="error-message text-red-500 text-sm mt-1 hidden">
+        Por favor seleccione un perfil
+      </p>
+    </div>
+    <div>
+      <label
+        for="amount"
+        class="block text-gray-700 mb-2"
+        >Monto Solicitado</label
+      >
+      <div class="relative">
+        <span class="absolute left-3 top-2 text-gray-500">$</span>
+        <input
+          type="number"
+          id="amount"
+          placeholder="Ej: 1000000"
+          class="w-full p-2 pl-8 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+      <p class="error-message text-red-500 text-sm mt-1 hidden">
+        Ingrese un monto válido
+      </p>
+    </div>
+    <div>
+      <label
+        for="term"
+        class="block text-gray-700 mb-2"
+        >Plazo en Meses</label
+      >
+      <input
+        type="number"
+        id="term"
+        placeholder="Ej: 24"
+        min="1"
+        class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <p class="error-message text-red-500 text-sm mt-1 hidden">
+        Ingrese un plazo válido
+      </p>
+    </div>
+    <div class="col-span-1 md:col-span-2 lg:col-span-3 flex justify-end">
+      <button
+        type="submit"
+        id="calculate-btn"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition duration-200"
+      >
+        <i class="fas fa-calculator mr-2"></i>Calcular
+      </button>
+    </div>
+  </form>
+</div>
+
+<div
+  id="results-section"
+  class="hidden bg-white p-6 rounded-lg shadow mb-6"
+>
+  <h2 class="text-xl font-semibold mb-4 flex items-center">
+    <i class="fas fa-chart-pie mr-2"></i>Resultados del Crédito
+  </h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+      <h3 class="text-sm text-blue-600 font-medium uppercase">
+        Total Préstamo
+      </h3>
+      <p
+        id="total-loan"
+        class="text-2xl font-bold"
+      >
+        $0
+      </p>
+      <p class="text-xs text-gray-500">Capital + Adicionales</p>
+    </div>
+    <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+      <h3 class="text-sm text-green-600 font-medium uppercase">
+        Cuota Fija Mensual
+      </h3>
+      <p
+        id="monthly-payment"
+        class="text-2xl font-bold"
+      >
+        $0
+      </p>
+      <p class="text-xs text-gray-500">Incluye capital e intereses</p>
+    </div>
+    <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+      <h3 class="text-sm text-purple-600 font-medium uppercase">
+        Valor Desembolsado
+      </h3>
+      <p
+        id="disbursed-amount"
+        class="text-2xl font-bold"
+      >
+        $0
+      </p>
+      <p class="text-xs text-gray-500">Monto neto a recibir</p>
+    </div>
+  </div>
+
+  {% if user_role == 'ADMIN' %}
+  <div
+    id="charges-breakdown"
+    class="mb-6"
+  >
+    <h3 class="text-lg font-medium mb-2">Desglose de Cargos Adicionales</h3>
+    <div
+      class="overflow-x-auto bg-gray-50 p-4 rounded-lg border border-gray-200"
+    >
+      <table class="w-full text-left table-auto">
+        <tbody class="text-sm">
+          <tr>
+            <td class="px-3 py-2 font-semibold">Afianzamiento</td>
+            <td
+              id="guarantee-value"
+              class="px-3 py-2"
+            >
+              $0
+            </td>
+          </tr>
+          <tr>
+            <td class="px-3 py-2 font-semibold">IVA del Afianzamiento</td>
+            <td
+              id="guarantee-vat-value"
+              class="px-3 py-2"
+            >
+              $0
+            </td>
+          </tr>
+          <tr>
+            <td class="px-3 py-2 font-semibold">Interés de Carencia</td>
+            <td
+              id="grace-value"
+              class="px-3 py-2"
+            >
+              $0
+            </td>
+          </tr>
+          <tr>
+            <td class="px-3 py-2 font-semibold">Seguro</td>
+            <td
+              id="insurance-value"
+              class="px-3 py-2"
+            >
+              $0
+            </td>
+          </tr>
+          <tr>
+            <td class="px-3 py-2 font-semibold">Corredor Autorizado</td>
+            <td
+              id="broker-value"
+              class="px-3 py-2"
+            >
+              $0
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div
+    id="amortization-section"
+    class="mb-6"
+  >
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="text-lg font-medium">Tabla de Amortización</h3>
+      <div>
+        <button
+          id="download-excel"
+          class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm transition duration-200"
+        >
+          <i class="fas fa-file-excel mr-2"></i>Exportar a Excel
+        </button>
+        <button
+          id="download-pdf"
+          class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm transition duration-200 ml-2"
+        >
+          <i class="fas fa-file-pdf mr-2"></i>Exportar a PDF
+        </button>
+      </div>
+    </div>
+    <div
+      class="max-h-96 overflow-y-auto bg-gray-50 rounded-lg border border-gray-200"
+    >
+      <table class="w-full text-left table-auto">
+        <thead class="sticky top-0 bg-gray-100 shadow-sm">
+          <tr>
+            <th class="px-4 py-3">Periodo</th>
+            <th class="px-4 py-3">Saldo Inicial</th>
+            <th class="px-4 py-3">Interés</th>
+            <th class="px-4 py-3">Cuota</th>
+            <th class="px-4 py-3">Amortización</th>
+            <th class="px-4 py-3">Saldo Final</th>
+          </tr>
+        </thead>
+        <tbody id="amortization-table"></tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %} {% block scripts %}
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %}
