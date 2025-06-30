@@ -24,8 +24,19 @@
         class="container mx-auto px-4 py-4 flex justify-between items-center"
       >
         <div class="flex items-center">
-          <i class="fas fa-chart-line text-2xl mr-3"></i>
-          <h1 class="text-xl font-bold">SimuCredit Pro</h1>
+          <!-- LOGO: Reemplaza 'logo.png' por tu archivo de logo en static/img/ -->
+          <div
+            class="bg-white rounded-xl shadow-md p-1 mr-4 flex items-center"
+            style="height: 64px"
+          >
+            <img
+              src="{% static 'img/logo.png' %}"
+              alt="Logo SimuCredit"
+              class="h-14 w-auto"
+              style="max-width: 120px"
+            />
+          </div>
+          <span class="text-2xl font-bold text-white drop-shadow"></span>
         </div>
         {% if user.is_authenticated %}
         <nav class="flex items-center gap-4 mr-6">
