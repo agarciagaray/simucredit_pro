@@ -39,32 +39,38 @@ class CreditProfile(BaseModel):
     interest_rate = models.DecimalField(
         max_digits=5, decimal_places=2, verbose_name="Tasa de Interés Nominal Mensual (%)",
         help_text="Tasa de interés mensual. Ej: 1.91 para 1.91%",
-        validators=[MinValueValidator(0)]
+        validators=[MinValueValidator(0)],
+        null=True, blank=True
     )
     guarantee_percentage = models.DecimalField(
         max_digits=5, decimal_places=2, verbose_name="Porcentaje de Afianzamiento (%)",
         help_text="Porcentaje sobre el monto solicitado para el afianzamiento.",
-        validators=[MinValueValidator(0)]
+        validators=[MinValueValidator(0)],
+        null=True, blank=True
     )
     guarantee_vat_percentage = models.DecimalField(
         max_digits=5, decimal_places=2, default=19.00, verbose_name="IVA del Afianzamiento (%)",
         help_text="Porcentaje de IVA que se aplica sobre el valor del afianzamiento. Ej: 19.00",
-        validators=[MinValueValidator(0)]
+        validators=[MinValueValidator(0)],
+        null=True, blank=True
     )
     grace_period_days = models.IntegerField(
         verbose_name="Días de Interés de Carencia",
         help_text="Número de días para el cálculo del interés de carencia.",
-        validators=[MinValueValidator(0)]
+        validators=[MinValueValidator(0)],
+        null=True, blank=True
     )
     insurance_percentage = models.DecimalField(
         max_digits=5, decimal_places=2, verbose_name="Porcentaje de Seguro (%)",
         help_text="Porcentaje sobre el monto solicitado para el seguro de vida.",
-        validators=[MinValueValidator(0)]
+        validators=[MinValueValidator(0)],
+        null=True, blank=True
     )
     broker_commission_percentage = models.DecimalField(
         max_digits=5, decimal_places=2, verbose_name="Comisión del Corredor (%)",
         help_text="Porcentaje de comisión para el corredor autorizado.",
-        validators=[MinValueValidator(0)]
+        validators=[MinValueValidator(0)],
+        null=True, blank=True
     )
 
     def __str__(self):

@@ -75,7 +75,7 @@ def calculate_loan_view(request):
 @require_GET
 def export_excel_view(request):
     """
-    Genera y devuelve un archivo Excel con la tabla de amortización.
+    Genera y devuelve un archivo Excel con el resumen del crédito y la tabla de amortización en hojas separadas.
     """
     try:
         profile_id = request.GET.get('profile_id')
@@ -86,30 +86,101 @@ def export_excel_view(request):
         service = LoanCalculatorService(
             profile=profile, amount=amount, term=term)
         results = service.calculate_loan_details()
+
+        # --- Hoja de Resumen ---
+        charges = results['charges_breakdown']
+        summary_data = {
+            'Concepto': [
+                'Monto Desembolsado',
+                'Monto Total del Préstamo',
+                'Cuota Fija Mensual',
+                '---',
+                'Desglose de Cargos Adicionales',
+                'Afianzamiento',
+                'IVA del Afianzamiento',
+                'Interés de Carencia',
+                'Seguro',
+                'Comisión del Corredor'
+            ],
+            'Valor': [
+                results['disbursed_amount'],
+                results['total_loan_amount'],
+                results['monthly_payment'],
+                '---',
+                '---',
+                charges['guarantee'],
+                charges['guarantee_vat'],
+                charges['grace_period_interest'],
+                charges['insurance'],
+                charges['broker_commission']
+            ]
+        }
+        df_summary = pd.DataFrame(summary_data)
+        df_summary['Valor'] = df_summary['Valor'].apply(
+            lambda x: f"${float(x):,.2f}" if isinstance(
+                x, decimal.Decimal) else x
+        )
+
+        # --- Hoja de Amortización ---
         amortization_data = results['amortization_table']
-
-        df = pd.DataFrame(amortization_data)
-        # Formatear columnas a dos decimales
+        df_amortization = pd.DataFrame(amortization_data)
         for col in ['initial_balance', 'interest', 'monthly_payment', 'principal', 'final_balance']:
-            df[col] = df[col].apply(lambda x: round(float(x), 2))
+            df_amortization[col] = df_amortization[col].apply(
+                lambda x: float(x))
 
-        # Renombrar columnas para el reporte
-        df.rename(columns={
+        df_amortization.rename(columns={
             'period': 'Periodo', 'initial_balance': 'Saldo Inicial', 'interest': 'Interés',
             'monthly_payment': 'Cuota', 'principal': 'Amortización', 'final_balance': 'Saldo Final'
         }, inplace=True)
 
+        # --- Escribir en el buffer de Excel ---
         buffer = io.BytesIO()
         with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False, sheet_name='Amortizacion')
+            df_summary.to_excel(writer, index=False,
+                                sheet_name='ResumenCredito')
+            df_amortization.to_excel(
+                writer, index=False, sheet_name='TablaAmortizacion')
+
+            workbook = writer.book
+            worksheet_summary = writer.sheets['ResumenCredito']
+            for col in worksheet_summary.columns:
+                max_length = 0
+                column = col[0].column_letter
+                for cell in col:
+                    try:
+                        if len(str(cell.value)) > max_length:
+                            max_length = len(str(cell.value))
+                    except:
+                        pass
+                adjusted_width = (max_length + 2)
+                worksheet_summary.column_dimensions[column].width = adjusted_width
+
+            worksheet_amortization = writer.sheets['TablaAmortizacion']
+            for col in worksheet_amortization.columns:
+                max_length = 0
+                column = col[0].column_letter
+                for cell in col:
+                    try:
+                        if len(str(cell.value)) > max_length:
+                            max_length = len(str(cell.value))
+                    except:
+                        pass
+                adjusted_width = (max_length + 2)
+                worksheet_amortization.column_dimensions[column].width = adjusted_width
+
+            # Aplicar formato de moneda a la hoja de amortización
+            currency_format = '$ #,##0.00'
+            for col_letter in ['B', 'C', 'D', 'E', 'F']:
+                for cell in worksheet_amortization[col_letter]:
+                    cell.number_format = currency_format
 
         buffer.seek(0)
         response = HttpResponse(
             buffer,
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
-        filename = f"Amortizacion_{datetime.now().strftime('%Y%m%d')}.xlsx"
-        response['Content-Disposition'] = f'attachment; filename={filename}'
+        filename = f"ReporteCredito_{datetime.now().strftime('%Y%m%d')}.xlsx"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
 
     except (KeyError, ValueError, CreditProfile.DoesNotExist) as e:
@@ -171,19 +242,28 @@ def credit_profile_create(request):
     if request.method == 'POST':
         data = request.POST
         name = data.get('name')
+
+        def parse_decimal(val):
+            return decimal.Decimal(val) if val not in (None, '', 'None') else None
+
+        def parse_int(val):
+            return int(val) if val not in (None, '', 'None') else None
         if CreditProfile.objects.filter(name=name, deleted_at__isnull=True).exists():
             profiles = CreditProfile.objects.filter(deleted_at__isnull=True)
             error = f'Ya existe un perfil activo con el nombre "{name}".'
             return render(request, 'perfiles.html', {'profiles': profiles, 'error': error})
         profile = CreditProfile.objects.create(
             name=name,
-            interest_rate=data.get('interest_rate'),
-            guarantee_percentage=data.get('guarantee_percentage'),
-            guarantee_vat_percentage=data.get('guarantee_vat_percentage'),
-            grace_period_days=data.get('grace_period_days'),
-            insurance_percentage=data.get('insurance_percentage'),
-            broker_commission_percentage=data.get(
-                'broker_commission_percentage'),
+            interest_rate=parse_decimal(data.get('interest_rate')),
+            guarantee_percentage=parse_decimal(
+                data.get('guarantee_percentage')),
+            guarantee_vat_percentage=parse_decimal(
+                data.get('guarantee_vat_percentage')),
+            grace_period_days=parse_int(data.get('grace_period_days')),
+            insurance_percentage=parse_decimal(
+                data.get('insurance_percentage')),
+            broker_commission_percentage=parse_decimal(
+                data.get('broker_commission_percentage')),
         )
         return redirect(reverse('credit_profiles_list'))
     return HttpResponseBadRequest('Método no permitido')
@@ -198,14 +278,23 @@ def credit_profile_edit(request, pk):
         return HttpResponseBadRequest('Perfil no encontrado')
     if request.method == 'POST':
         data = request.POST
+
+        def parse_decimal(val):
+            return decimal.Decimal(val) if val not in (None, '', 'None') else None
+
+        def parse_int(val):
+            return int(val) if val not in (None, '', 'None') else None
         profile.name = data.get('name')
-        profile.interest_rate = data.get('interest_rate')
-        profile.guarantee_percentage = data.get('guarantee_percentage')
-        profile.guarantee_vat_percentage = data.get('guarantee_vat_percentage')
-        profile.grace_period_days = data.get('grace_period_days')
-        profile.insurance_percentage = data.get('insurance_percentage')
-        profile.broker_commission_percentage = data.get(
-            'broker_commission_percentage')
+        profile.interest_rate = parse_decimal(data.get('interest_rate'))
+        profile.guarantee_percentage = parse_decimal(
+            data.get('guarantee_percentage'))
+        profile.guarantee_vat_percentage = parse_decimal(
+            data.get('guarantee_vat_percentage'))
+        profile.grace_period_days = parse_int(data.get('grace_period_days'))
+        profile.insurance_percentage = parse_decimal(
+            data.get('insurance_percentage'))
+        profile.broker_commission_percentage = parse_decimal(
+            data.get('broker_commission_percentage'))
         profile.save()
         return redirect(reverse('credit_profiles_list'))
     return HttpResponseBadRequest('Método no permitido')
