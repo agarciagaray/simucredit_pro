@@ -48,7 +48,7 @@ simucredit_project/
    ```
 3. **Instala las dependencias:**
    ```bash
-   pip install -r requirements.txt
+   python -m pip install -r requirements.txt
    ```
 4. **Aplica las migraciones:**
    ```bash
