@@ -3,33 +3,65 @@
 {% block title %}Iniciar Sesión - SimuCredit Pro{% endblock %}
 
 {% block content %}
-<div class="flex items-center justify-center mt-10">
-    <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Iniciar Sesión</h2>
-        
-        {% if form.errors %}
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <strong class="font-bold">Error: </strong>
-            <span class="block sm:inline">Tu usuario y/o contraseña no son correctos.</span>
-        </div>
-        {% endif %}
+<div style="display: flex; align-items: center; justify-content: center; min-height: 60vh;">
+    <div style="width: 100%; max-width: 400px;">
+        <div class="card">
+            <div class="card-header text-center">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #4259ED 0%, #3B82F6 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                    <i class="fas fa-lock" style="color: white; font-size: 24px;"></i>
+                </div>
+                <h2 class="card-title">Iniciar Sesión</h2>
+                <p class="card-subtitle">Accede a tu cuenta de SimuCredit Pro</p>
+            </div>
+            
+            {% if form.errors %}
+            <div class="alert alert-error mb-4">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Error:</strong> Tu usuario y/o contraseña no son correctos.
+            </div>
+            {% endif %}
 
-        <form method="post">
-            {% csrf_token %}
-            <div class="mb-4">
-                <label for="id_username" class="block text-gray-700 text-sm font-bold mb-2">Usuario:</label>
-                <input type="text" name="username" id="id_username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <div class="mb-6">
-                <label for="id_password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
-                <input type="password" name="password" id="id_password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <div class="flex items-center justify-between">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
-                    Entrar
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_username" class="form-label">
+                        <i class="fas fa-user"></i> Usuario
+                    </label>
+                    <input 
+                        type="text" 
+                        name="username" 
+                        id="id_username" 
+                        class="form-control" 
+                        placeholder="Ingresa tu usuario"
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_password" class="form-label">
+                        <i class="fas fa-lock"></i> Contraseña
+                    </label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        id="id_password" 
+                        class="form-control" 
+                        placeholder="Ingresa tu contraseña"
+                        required
+                    >
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
                 </button>
-            </div>
-        </form>
+            </form>
+        </div>
+        
+        <div class="text-center mt-6">
+            <p style="color: var(--secondary-text); font-size: var(--text-sm);">
+                ¿Necesitas ayuda? Contacta al administrador del sistema.
+            </p>
+        </div>
     </div>
 </div>
 {% endblock %}

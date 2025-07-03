@@ -1,94 +1,82 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SimuCredit Pro{% endblock %}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="{% static 'css/styles.css' %}"
-    />
-  </head>
-  <body class="bg-gray-50 flex flex-col min-h-screen">
-    <header class="bg-blue-800 text-white shadow-lg">
-      <div
-        class="container mx-auto px-4 py-4 flex justify-between items-center"
-      >
-        <div class="flex items-center">
-          <!-- LOGO: Reemplaza 'logo.png' por tu archivo de logo en static/img/ -->
-          <div
-            class="bg-white rounded-xl shadow-md p-1 mr-4 flex items-center"
-            style="height: 64px"
-          >
-            <img
-              src="{% static 'img/logo.png' %}"
-              alt="Logo SimuCredit"
-              class="h-14 w-auto"
-              style="max-width: 120px"
-            />
-          </div>
-          <span class="text-2xl font-bold text-white drop-shadow"></span>
+    
+    <!-- Google Fonts - Nunito Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/landflow.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo -->
+            <a href="{% url 'simulator' %}" class="logo">
+                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #4259ED 0%, #3B82F6 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-calculator" style="color: white; font-size: 18px;"></i>
+                </div>
+                <span class="logo-text">SimuCredit Pro</span>
+            </a>
+
+            {% if user.is_authenticated %}
+            <!-- Navigation -->
+            <nav class="nav-menu">
+                {% if user.is_staff %}
+                <a href="{% url 'simulator' %}" class="nav-link {% if request.resolver_match.url_name == 'simulator' %}active{% endif %}">
+                    <i class="fas fa-calculator"></i> Simulador
+                </a>
+                <a href="{% url 'credit_profiles_list' %}" class="nav-link {% if 'credit_profiles' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="fas fa-cog"></i> Perfiles
+                </a>
+                <a href="{% url 'users_list' %}" class="nav-link {% if 'users' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="fas fa-users"></i> Usuarios
+                </a>
+                {% endif %}
+                
+                <!-- User Info -->
+                <div class="user-info">
+                    <div>
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-name">{{ user.username }}</span>
+                        {% if user.is_staff %}
+                        <span style="font-size: 0.75rem; color: var(--accent-blue); margin-left: 0.5rem;">
+                            <i class="fas fa-crown"></i> Admin
+                        </span>
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'logout' %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-sign-out-alt"></i> Salir
+                    </a>
+                </div>
+            </nav>
+            {% endif %}
         </div>
-        {% if user.is_authenticated %}
-        <nav class="flex items-center gap-4 mr-6">
-          {% if user.is_staff %}
-          <a
-            href="{% url 'simulator' %}"
-            class="hover:underline"
-            >Simulador</a
-          >
-          <a
-            href="{% url 'credit_profiles_list' %}"
-            class="hover:underline"
-            >Perfiles</a
-          >
-          <a
-            href="{% url 'users_list' %}"
-            class="hover:underline"
-            >Usuarios</a
-          >
-          {% endif %}
-        </nav>
-        <div class="flex items-center">
-          <div class="mr-4">
-            <span class="hidden md:inline">Usuario: </span>
-            <span class="font-semibold">{{ user.username }}</span>
-          </div>
-          <a
-            href="{% url 'logout' %}"
-            class="bg-blue-700 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-200"
-          >
-            <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
-          </a>
-        </div>
-        {% endif %}
-      </div>
     </header>
 
-    <main class="container mx-auto px-4 py-6 flex-grow">
-      {% block content %} {% endblock %}
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-gray-800 text-white py-4">
-      <div class="container mx-auto px-4 text-center">
-        <p>
-          &copy; {% now "Y" %} SimuCredit Pro. Todos los derechos reservados.
-        </p>
-        <p class="text-gray-400 text-sm mt-1">
-          Simulador de créditos y cálculo de amortización.
-        </p>
-      </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; {% now "Y" %} SimuCredit Pro. Todos los derechos reservados.</p>
+        <p>Simulador profesional de créditos y cálculo de amortización.</p>
     </footer>
 
-    {% block scripts %} {% endblock %}
-  </body>
+    {% block scripts %}{% endblock %}
+</body>
 </html>
