@@ -1,0 +1,361 @@
+{% extends 'base_landing.html' %}
+
+{% block content %}
+<!-- Header -->
+<header class="fixed w-full bg-white/90 backdrop-blur-sm z-50 shadow-sm transition-all duration-300" id="header">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+        <!-- Logo -->
+        <a href="#" class="flex items-center">
+            <img src="{% static 'img/logo.svg' %}" alt="SimuCredit Pro Logo" class="h-10 w-auto">
+            <span class="ml-3 text-xl font-bold text-gray-900">SimuCredit <span class="text-blue-600">Pro</span></span>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center space-x-8">
+            <a href="#features" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Características</a>
+            <a href="#how-it-works" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">¿Cómo funciona?</a>
+            <a href="#pricing" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Precios</a>
+            <a href="#testimonials" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Testimonios</a>
+            <a href="{% url 'simulator' %}" class="ml-4 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                Ir al Simulador
+            </a>
+        </nav>
+
+        <!-- Mobile menu button -->
+        <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none">
+            <i data-lucide="menu" class="h-6 w-6"></i>
+        </button>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+        <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+            <a href="#features" class="py-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Características</a>
+            <a href="#how-it-works" class="py-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">¿Cómo funciona?</a>
+            <a href="#pricing" class="py-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Precios</a>
+            <a href="#testimonials" class="py-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Testimonios</a>
+            <a href="{% url 'simulator' %}" class="mt-2 py-2 px-4 bg-blue-600 text-white text-sm font-medium text-center rounded-lg hover:bg-blue-700 transition-colors">
+                Ir al Simulador
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="pt-32 pb-20 bg-gradient-to-b from-blue-50 to-white">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col lg:flex-row items-center">
+            <!-- Hero Content -->
+            <div class="lg:w-1/2 mb-12 lg:mb-0 lg:pr-10">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
+                    La mejor herramienta para simular créditos
+                </h1>
+                <p class="text-lg text-gray-600 mb-8">
+                    Optimiza tus préstamos con nuestro simulador avanzado. Obtén cálculos precisos de amortización, tasas de interés y cronogramas de pago en segundos.
+                </p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="{% url 'simulator' %}" class="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-center">
+                        Comenzar Ahora
+                    </a>
+                    <a href="#features" class="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:border-blue-400 hover:text-blue-600 transition-colors flex items-center justify-center space-x-2">
+                        <span>Ver características</span>
+                        <i data-lucide="arrow-down" class="h-4 w-4"></i>
+                    </a>
+                </div>
+                <div class="mt-8 flex items-center">
+                    <div class="flex -space-x-2">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+                    </div>
+                    <div class="ml-4">
+                        <div class="flex items-center">
+                            <div class="flex text-yellow-400">
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            </div>
+                            <span class="ml-1 text-sm font-medium text-gray-900">4.9/5</span>
+                        </div>
+                        <p class="text-sm text-gray-600">+500 usuarios satisfechos</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Image -->
+            <div class="lg:w-1/2 relative">
+                <div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-transform duration-500">
+                    <img src="{% static 'img/hero-dashboard.png' %}" alt="SimuCredit Pro Dashboard" class="w-full h-auto">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                </div>
+                <!-- Floating elements -->
+                <div class="absolute -bottom-4 -left-4 bg-white p-3 rounded-lg shadow-lg z-20 hidden lg:block">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 p-2 rounded-lg">
+                            <i data-lucide="zap" class="w-5 h-5 text-blue-600"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-semibold text-gray-900">Cálculos en tiempo real</p>
+                            <p class="text-xs text-gray-600">Resultados instantáneos</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute -top-4 -right-4 bg-white p-3 rounded-lg shadow-lg z-20 hidden lg:block">
+                    <div class="flex items-center">
+                        <div class="bg-green-100 p-2 rounded-lg">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-green-600"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-semibold text-gray-900">100% Seguro</p>
+                            <p class="text-xs text-gray-600">Tus datos protegidos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="inline-block px-3 py-1 text-xs font-semibold text-blue-600 bg-blue-100 rounded-full mb-4">CARACTERÍSTICAS</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Todo lo que necesitas en un solo lugar</h2>
+            <p class="text-lg text-gray-600">Descubre cómo nuestro simulador de créditos puede ayudarte a tomar decisiones financieras más inteligentes.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-white rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
+                <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6">
+                    <i data-lucide="calculator" class="w-6 h-6 text-blue-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Simulaciones Precisas</h3>
+                <p class="text-gray-600">Calcula pagos mensuales, intereses totales y cronograma de amortización con precisión.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="bg-white rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
+                <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6">
+                    <i data-lucide="line-chart" class="w-6 h-6 text-blue-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Múltiples Escenarios</h3>
+                <p class="text-gray-600">Compara diferentes plazos, tasas de interés y montos para encontrar la mejor opción.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="bg-white rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
+                <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6">
+                    <i data-lucide="file-text" class="w-6 h-6 text-blue-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Informes Detallados</h3>
+                <p class="text-gray-600">Genera informes completos en PDF y Excel para compartir con clientes o análisis.</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="bg-white rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
+                <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6">
+                    <i data-lucide="smartphone" class="w-6 h-6 text-blue-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Diseño Responsivo</h3>
+                <p class="text-gray-600">Accede desde cualquier dispositivo, ya sea computadora, tableta o teléfono móvil.</p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="bg-white rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
+                <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6">
+                    <i data-lucide="shield-check" class="w-6 h-6 text-blue-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Seguridad Garantizada</h3>
+                <p class="text-gray-600">Tus datos están protegidos con encriptación de grado bancario.</p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="bg-white rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
+                <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6">
+                    <i data-lucide="headphones" class="w-6 h-6 text-blue-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Soporte 24/7</h3>
+                <p class="text-gray-600">Nuestro equipo de soporte está disponible para ayudarte en cualquier momento.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section id="how-it-works" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="inline-block px-3 py-1 text-xs font-semibold text-blue-600 bg-blue-100 rounded-full mb-4">¿CÓMO FUNCIONA?</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Simular un crédito nunca fue tan fácil</h2>
+            <p class="text-lg text-gray-600">Sigue estos simples pasos para obtener resultados precisos en segundos.</p>
+        </div>
+
+        <div class="max-w-4xl mx-auto">
+            <!-- Step 1 -->
+            <div class="flex flex-col md:flex-row items-center mb-16">
+                <div class="md:w-1/3 mb-8 md:mb-0 md:pr-8">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-2xl mb-4 mx-auto md:mx-0">1</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Ingresa los datos del préstamo</h3>
+                    <p class="text-gray-600">Monto, tasa de interés, plazo y fecha de desembolso.</p>
+                </div>
+                <div class="md:w-2/3 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <div class="h-48 flex items-center justify-center text-gray-400">
+                            [Captura de pantalla del formulario de simulación]
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="flex flex-col md:flex-row items-center mb-16">
+                <div class="md:w-1/3 order-2 md:order-1 md:pr-8 mt-8 md:mt-0">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-2xl mb-4 mx-auto md:mx-0">2</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Revisa los resultados</h3>
+                    <p class="text-gray-600">Visualiza el resumen de pagos, intereses y cronograma completo.</p>
+                </div>
+                <div class="md:w-2/3 order-1 md:order-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <div class="h-48 flex items-center justify-center text-gray-400">
+                            [Captura de pantalla de resultados]
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/3 mb-8 md:mb-0 md:pr-8">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-2xl mb-4 mx-auto md:mx-0">3</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Descarga o comparte</h3>
+                    <p class="text-gray-600">Exporta el informe en PDF o Excel para compartirlo con tus clientes.</p>
+                </div>
+                <div class="md:w-2/3 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <div class="h-48 flex items-center justify-center text-gray-400">
+                            [Captura de pantalla de opciones de exportación]
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section id="pricing" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="inline-block px-3 py-1 text-xs font-semibold text-blue-600 bg-blue-100 rounded-full mb-4">PRECIOS</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Planes que se adaptan a ti</h2>
+            <p class="text-lg text-gray-600">Elige el plan que mejor se ajuste a tus necesidades.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <!-- Plan Básico -->
+            <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
+                <div class="p-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-1">Básico</h3>
+                    <p class="text-gray-600 mb-6">Perfecto para empezar</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-gray-900">$0</span>
+                        <span class="text-gray-500">/mes</span>
+                    </div>
+                    <a href="{% url 'simulator' %}" class="block w-full py-3 px-6 bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium rounded-lg text-center transition-colors">
+                        Comenzar Gratis
+                    </a>
+                </div>
+                <div class="border-t border-gray-100 p-8">
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span>Hasta 5 simulaciones por mes</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span>Exportación a PDF</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span>Soporte por correo electrónico</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Plan Profesional -->
+            <div class="bg-white rounded-xl shadow-lg border-2 border-blue-500 transform scale-105 relative">
+                <div class="absolute top-0 right-0 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-bl-lg">MÁS POPULAR</div>
+                <div class="p-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-1">Profesional</h3>
+                    <p class="text-gray-600 mb-6">Ideal para asesores</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-gray-900">$29</span>
+                        <span class="text-gray-500">/mes</span>
+                    </div>
+                    <a href="{% url 'simulator' %}" class="block w-full py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-center transition-colors">
+                        Comenzar Prueba Gratis
+                    </a>
+                </div>
+                <div class="border-t border-gray-100 p-8">
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span>Simulaciones ilimitadas</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span>Exportación a PDF y Excel</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span>Soporte prioritario</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span>Plantillas personalizables</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Plan Empresas -->
+            <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
+                <div class="p-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-1">Empresas</h3>
+                    <p class="text-gray-600 mb-6">Para instituciones</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-gray-900">Personalizado</span>
+                    </div>
+                    <a href="#contact" class="block w-full py-3 px-6 bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium rounded-lg text-center transition-colors">
+                        Contactar Ventas
+                    </a>
+                </div>
+                <div class="border-t border-gray-100 p-8">
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span>Todo lo del plan Profesional</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span>API de integración</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span>Soporte 24/7</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <span>Entrenamiento personalizado</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

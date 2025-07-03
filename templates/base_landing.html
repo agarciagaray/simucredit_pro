@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SimuCredit Pro - La mejor herramienta para simular créditos y gestionar préstamos de manera profesional">
+    <meta name="keywords" content="simulador de créditos, préstamos, finanzas, amortización, crédito, SimuCredit">
+    <title>{% block title %}SimuCredit Pro - Simulador de Créditos Profesional{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/landflow.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="{% static 'css/landflow.css' %}" as="style">
+    <link rel="preload" href="{% static 'js/landing.js' %}" as="script">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="font-sans antialiased text-gray-900">
+    {% block content %}
+    <!-- Main content will be inserted here -->
+    {% endblock %}
+
+    <!-- Lucide Icons Initialization -->
+    <script>
+        lucide.createIcons();
+    </script>
+    
+    <!-- Main JavaScript -->
+    <script src="{% static 'js/landing.js' %}" defer></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
