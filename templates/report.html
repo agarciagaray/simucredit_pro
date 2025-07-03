@@ -2,93 +2,331 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Reporte de Simulación de Crédito</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Simulación de Crédito - SimuCredit Pro</title>
+    
+    <!-- Google Fonts - Nunito Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-        body { font-family: 'Roboto', sans-serif; color: #333; font-size: 12px; }
-        .container { width: 90%; margin: 0 auto; }
-        .header { text-align: center; border-bottom: 2px solid #0044cc; padding-bottom: 10px; margin-bottom: 20px; }
-        .header h1 { color: #0044cc; margin: 0; }
-        .header p { margin: 5px 0 0; }
-        .section-title { background-color: #e6f0ff; color: #0044cc; padding: 8px; font-weight: bold; margin-top: 20px; }
-        .summary-cards { display: flex; justify-content: space-between; margin: 20px 0; }
-        .card { background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 15px; text-align: center; width: 32%; }
-        .card h3 { margin: 0 0 5px; font-size: 11px; color: #555; text-transform: uppercase; }
-        .card p { margin: 0; font-size: 18px; font-weight: bold; color: #0044cc; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        thead { background-color: #f2f2f2; }
-        .details-table td:first-child { font-weight: bold; width: 40%; }
-        .amortization-table th { font-size: 11px; }
-        .amortization-table td { font-size: 10px; text-align: right; }
-        .footer { text-align: center; margin-top: 30px; font-size: 10px; color: #777; border-top: 1px solid #ccc; padding-top: 10px; }
+        :root {
+            /* Landflow Color Palette */
+            --primary-bg: #0A0F24;
+            --primary-text: #FFFFFF;
+            --secondary-text: #ADB5BD;
+            --accent-blue: #4259ED;
+            --accent-border: #313E64;
+            --accent-green: #00FF80;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            
+            /* Typography */
+            --font-primary: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-regular: 400;
+            --font-medium: 500;
+            --font-semibold: 600;
+            --font-bold: 700;
+            --font-extrabold: 800;
+            
+            /* Spacing */
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            
+            /* Border Radius */
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #4259ED 0%, #3B82F6 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: var(--font-primary); 
+            color: var(--primary-text); 
+            font-size: 12px; 
+            line-height: 1.6;
+            background: var(--primary-bg);
+            padding: var(--space-6);
+        }
+        
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: var(--card-bg);
+            border: 1px solid var(--accent-border);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header { 
+            text-align: center; 
+            border-bottom: 2px solid var(--accent-blue); 
+            padding-bottom: var(--space-4); 
+            margin-bottom: var(--space-6);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header h1 { 
+            font-size: 2.5rem;
+            font-weight: var(--font-extrabold);
+            margin: 0; 
+            margin-bottom: var(--space-2);
+        }
+        
+        .header p { 
+            margin: var(--space-2) 0 0; 
+            color: var(--secondary-text);
+            font-weight: var(--font-medium);
+        }
+        
+        .section-title { 
+            background: rgba(66, 89, 237, 0.1);
+            color: var(--accent-blue); 
+            padding: var(--space-3) var(--space-4); 
+            font-weight: var(--font-bold); 
+            margin-top: var(--space-6);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--accent-border);
+            font-size: 14px;
+        }
+        
+        .summary-cards { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: var(--space-4); 
+            margin: var(--space-6) 0; 
+        }
+        
+        .card { 
+            background: var(--card-bg); 
+            border: 1px solid var(--accent-border); 
+            border-radius: var(--radius-lg); 
+            padding: var(--space-4); 
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .card h3 { 
+            margin: 0 0 var(--space-2); 
+            font-size: 11px; 
+            color: var(--secondary-text); 
+            text-transform: uppercase; 
+            font-weight: var(--font-semibold);
+            letter-spacing: 0.05em;
+        }
+        
+        .card p { 
+            margin: 0; 
+            font-size: 18px; 
+            font-weight: var(--font-bold); 
+            color: var(--primary-text);
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: var(--space-4);
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--accent-border);
+        }
+        
+        th, td { 
+            border: 1px solid var(--accent-border); 
+            padding: var(--space-3); 
+            text-align: left; 
+        }
+        
+        thead { 
+            background: rgba(66, 89, 237, 0.1);
+        }
+        
+        th {
+            color: var(--primary-text);
+            font-weight: var(--font-semibold);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        td {
+            color: var(--secondary-text);
+            font-size: 10px;
+        }
+        
+        .details-table td:first-child { 
+            font-weight: var(--font-semibold); 
+            width: 40%; 
+            color: var(--primary-text);
+        }
+        
+        .amortization-table th { 
+            font-size: 10px; 
+        }
+        
+        .amortization-table td { 
+            font-size: 9px; 
+            text-align: right; 
+        }
+        
+        .amortization-table td:first-child {
+            text-align: center;
+            font-weight: var(--font-semibold);
+            color: var(--primary-text);
+        }
+        
+        .footer { 
+            text-align: center; 
+            margin-top: var(--space-8); 
+            font-size: 10px; 
+            color: var(--secondary-text); 
+            border-top: 1px solid var(--accent-border); 
+            padding-top: var(--space-4);
+            font-style: italic;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+        
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .highlight-value {
+            color: var(--accent-green);
+            font-weight: var(--font-bold);
+        }
+        
+        @media print {
+            body {
+                background: white;
+                color: #333;
+            }
+            
+            .container {
+                background: white;
+                border: 1px solid #ddd;
+                box-shadow: none;
+            }
+            
+            .header h1 {
+                color: #4259ED;
+            }
+            
+            .section-title {
+                background: #f0f4ff;
+                color: #4259ED;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>SimuCredit Pro</h1>
-            <p>Reporte de Simulación de Crédito</p>
-            <p>Generado el: {% now "d/m/Y H:i" %}</p>
+            <div class="logo-section">
+                <div class="logo-icon">📊</div>
+                <div>
+                    <h1>SimuCredit Pro</h1>
+                    <p>Reporte de Simulación de Crédito</p>
+                </div>
+            </div>
+            <p><strong>Generado el:</strong> {% now "d/m/Y H:i" %}</p>
         </div>
 
         <div class="summary-cards">
             <div class="card">
-                <h3>Total Préstamo</h3>
-                <p>{{ results.total_loan_amount|floatformat:2 }}</p>
+                <h3>💰 Total Préstamo</h3>
+                <p class="highlight-value">${{ results.total_loan_amount|floatformat:0 }}</p>
             </div>
             <div class="card">
-                <h3>Cuota Fija Mensual</h3>
-                <p>{{ results.monthly_payment|floatformat:2 }}</p>
+                <h3>💳 Cuota Mensual</h3>
+                <p class="highlight-value">${{ results.monthly_payment|floatformat:0 }}</p>
             </div>
             <div class="card">
-                <h3>Valor Desembolsado</h3>
-                <p>{{ results.disbursed_amount|floatformat:2 }}</p>
+                <h3>🏦 Valor Desembolsado</h3>
+                <p class="highlight-value">${{ results.disbursed_amount|floatformat:0 }}</p>
             </div>
         </div>
 
-        <div class="section-title">Detalles de la Simulación</div>
+        <div class="section-title">📋 Detalles de la Simulación</div>
         <table class="details-table">
             <tbody>
-                <tr><td>Perfil de Crédito</td><td>{{ profile.name }}</td></tr>
-                <tr><td>Monto Solicitado</td><td>{{ results.disbursed_amount|floatformat:2 }}</td></tr>
-                <tr><td>Plazo</td><td>{{ term }} meses</td></tr>
-                <tr><td>Tasa Interés N.M.V.</td><td>{{ profile.interest_rate }}%</td></tr>
+                <tr><td>🏷️ Perfil de Crédito</td><td>{{ profile.name }}</td></tr>
+                <tr><td>💵 Monto Solicitado</td><td>${{ results.disbursed_amount|floatformat:0 }}</td></tr>
+                <tr><td>📅 Plazo</td><td>{{ term }} meses</td></tr>
+                <tr><td>📈 Tasa Interés N.M.V.</td><td>{{ profile.interest_rate }}%</td></tr>
             </tbody>
         </table>
 
-        <div class="section-title">Desglose de Cargos Adicionales</div>
+        <div class="section-title">💼 Desglose de Cargos Adicionales</div>
         <table class="details-table">
             <tbody>
-                <tr><td>Afianzamiento ({{ profile.guarantee_percentage }}%)</td><td>{{ results.charges_breakdown.guarantee|floatformat:2 }}</td></tr>
-                <tr><td>IVA del Afianzamiento ({{ profile.guarantee_vat_percentage }}%)</td><td>{{ results.charges_breakdown.guarantee_vat|floatformat:2 }}</td></tr>
-                <tr><td>Interés de Carencia ({{ profile.grace_period_days }} días)</td><td>{{ results.charges_breakdown.grace_period_interest|floatformat:2 }}</td></tr>
-                <tr><td>Seguro ({{ profile.insurance_percentage }}%)</td><td>{{ results.charges_breakdown.insurance|floatformat:2 }}</td></tr>
-                <tr><td>Corredor Autorizado ({{ profile.broker_commission_percentage }}%)</td><td>{{ results.charges_breakdown.broker_commission|floatformat:2 }}</td></tr>
+                <tr><td>🛡️ Afianzamiento ({{ profile.guarantee_percentage }}%)</td><td>${{ results.charges_breakdown.guarantee|floatformat:0 }}</td></tr>
+                <tr><td>🧾 IVA del Afianzamiento ({{ profile.guarantee_vat_percentage }}%)</td><td>${{ results.charges_breakdown.guarantee_vat|floatformat:0 }}</td></tr>
+                <tr><td>⏰ Interés de Carencia ({{ profile.grace_period_days }} días)</td><td>${{ results.charges_breakdown.grace_period_interest|floatformat:0 }}</td></tr>
+                <tr><td>☂️ Seguro ({{ profile.insurance_percentage }}%)</td><td>${{ results.charges_breakdown.insurance|floatformat:0 }}</td></tr>
+                <tr><td>👔 Corredor Autorizado ({{ profile.broker_commission_percentage }}%)</td><td>${{ results.charges_breakdown.broker_commission|floatformat:0 }}</td></tr>
             </tbody>
         </table>
 
-        <div class="section-title">Tabla de Amortización</div>
+        <div class="section-title">📊 Tabla de Amortización</div>
         <table class="amortization-table">
             <thead>
-                <tr><th>Periodo</th><th>Saldo Inicial</th><th>Interés</th><th>Cuota</th><th>Amortización</th><th>Saldo Final</th></tr>
+                <tr>
+                    <th>#</th>
+                    <th>Saldo Inicial</th>
+                    <th>Interés</th>
+                    <th>Cuota</th>
+                    <th>Amortización</th>
+                    <th>Saldo Final</th>
+                </tr>
             </thead>
             <tbody>
                 {% for row in results.amortization_table %}
                 <tr>
-                    <td style="text-align: center;">{{ row.period }}</td>
-                    <td>{{ row.initial_balance|floatformat:2 }}</td>
-                    <td>{{ row.interest|floatformat:2 }}</td>
-                    <td>{{ row.monthly_payment|floatformat:2 }}</td>
-                    <td>{{ row.principal|floatformat:2 }}</td>
-                    <td>{{ row.final_balance|floatformat:2 }}</td>
+                    <td>{{ row.period }}</td>
+                    <td>${{ row.initial_balance|floatformat:0 }}</td>
+                    <td>${{ row.interest|floatformat:0 }}</td>
+                    <td class="highlight-value">${{ row.monthly_payment|floatformat:0 }}</td>
+                    <td>${{ row.principal|floatformat:0 }}</td>
+                    <td>{% if row.final_balance == 0 %}<span class="highlight-value">$0</span>{% else %}<span>${{ row.final_balance|floatformat:0 }}</span>{% endif %}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
 
         <div class="footer">
-            Este es un documento informativo y no representa una obligación contractual. Los valores son aproximados.
+            <p><strong>📄 SimuCredit Pro</strong> - Simulador Profesional de Créditos</p>
+            <p>Este es un documento informativo y no representa una obligación contractual. Los valores son aproximados.</p>
+            <p>Generado automáticamente el {% now "d/m/Y \a \l\a\s H:i" %}</p>
         </div>
     </div>
 </body>
